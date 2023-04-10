@@ -10,12 +10,12 @@ import org.jxmapviewer.viewer.GeoPosition;
 public class WayPoints extends DefaultWaypoint{
     private String name;
     private JButton button;
-    private void initButton(){
+    private void initButton(EventWaypoint event){
         button = new ButtonWaypoint();
         button.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                System.out.println("Click: " + name);
+                event.selected(WayPoints.this);
             }    
         });
     }
@@ -26,10 +26,10 @@ public class WayPoints extends DefaultWaypoint{
         /*Empty*/
     }
 
-    public WayPoints(String name, GeoPosition coordinate){
+    public WayPoints(String name, EventWaypoint event, GeoPosition coordinate){
         super(coordinate);
         this.name = name;
-        initButton();
+        initButton(event);
     }
 
     public String getName(){

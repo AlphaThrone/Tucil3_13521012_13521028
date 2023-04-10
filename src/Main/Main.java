@@ -2,7 +2,11 @@ package Main;
 
 import java.util.*;
 
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputListener;
+
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.OSMTileFactoryInfo;
@@ -10,11 +14,16 @@ import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.WaypointPainter;
+
+import Algorithm.FileReader;
+
 import org.jxmapviewer.VirtualEarthTileFactoryInfo;
 
 public class Main extends javax.swing.JFrame {
-
+    static JLabel l;
     private final Set<WayPoints> waypoints = new HashSet<WayPoints>();
+    private EventWaypoint event;
+
 
     public Main() {
         initComponents();
@@ -33,6 +42,7 @@ public class Main extends javax.swing.JFrame {
         jXMapViewer.addMouseListener(mouse);
         jXMapViewer.addMouseMotionListener(mouse);
         jXMapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(jXMapViewer));
+        event = getEvent();
     }
     
     private void initWaypoint(){
@@ -59,6 +69,15 @@ public class Main extends javax.swing.JFrame {
         waypoints.clear();
         initWaypoint();
     }
+
+    private EventWaypoint getEvent(){
+        return new EventWaypoint() {
+            @Override
+            public void selected(WayPoints waypoint){
+                JOptionPane.showMessageDialog(Main.this, waypoint.getName());
+            }
+        };
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -73,6 +92,7 @@ public class Main extends javax.swing.JFrame {
         comboMapType = new javax.swing.JComboBox<>();
         cmdAdd = new javax.swing.JButton();
         cmdClear = new javax.swing.JButton();
+        chooseFile = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -97,12 +117,21 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        chooseFile.setText("Choose File");
+        chooseFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chooseFileActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jXMapViewerLayout = new javax.swing.GroupLayout(jXMapViewer);
         jXMapViewer.setLayout(jXMapViewerLayout);
         jXMapViewerLayout.setHorizontalGroup(
             jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jXMapViewerLayout.createSequentialGroup()
-                .addComponent(cmdAdd)
+            .addGroup(jXMapViewerLayout.createSequentialGroup()
+                .addGroup(jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(chooseFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmdAdd, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cmdClear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 679, Short.MAX_VALUE)
@@ -115,7 +144,9 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmdAdd)
                     .addComponent(cmdClear))
-                .addGap(0, 633, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chooseFile)
+                .addGap(0, 598, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -150,13 +181,24 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_comboMapTypeActionPerformed
 
     private void cmdAddActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        addWaypoint(new WayPoints("Test 1", new GeoPosition(-6.893442,107.6097034)));
-        addWaypoint(new WayPoints("Test 2", new GeoPosition(-6.893541, 107.611945)));
+        addWaypoint(new WayPoints("Test 1", event,new GeoPosition(-6.893442,107.6097034)));
+        addWaypoint(new WayPoints("Test 2", event,new GeoPosition(50,  7, 0, 8, 41, 0)));
     }                                      
 
     private void cmdClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdClearActionPerformed
         clearWaypoint();
     }//GEN-LAST:event_cmdClearActionPerformed
+    
+    private void chooseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseFileActionPerformed
+        JFileChooser j = new JFileChooser();
+
+        int response = j.showOpenDialog(null);
+ 
+        if(response == JFileChooser.APPROVE_OPTION){
+            FileReader file = new FileReader();
+            file.read(j.getSelectedFile().getAbsolutePath());
+        }
+    }//GEN-LAST:event_chooseFileActionPerformed
 
     /**
      * @param args the command line arguments
@@ -186,9 +228,11 @@ public class Main extends javax.swing.JFrame {
                 new Main().setVisible(true);
             }
         });
+        l = new JLabel("no file selected");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton chooseFile;
     private javax.swing.JButton cmdAdd;
     private javax.swing.JButton cmdClear;
     private javax.swing.JComboBox<String> comboMapType;
