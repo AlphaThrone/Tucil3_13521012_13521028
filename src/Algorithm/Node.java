@@ -12,6 +12,7 @@ public class Node {
     private ArrayList<WayPoints> neighbourNodes;
     private ArrayList<Double> distanceNeighbour;
     private ArrayList<Double> straightDistance;
+    private WayPoints previousNode;
 
     public Node(String name, EventWaypoint event ,Double latitude, Double longitude){
         GeoPosition temp = new GeoPosition(latitude, longitude);
@@ -19,6 +20,7 @@ public class Node {
         neighbourNodes = new ArrayList<WayPoints>();
         distanceNeighbour = new ArrayList<Double>();
         straightDistance = new ArrayList<Double>();
+        previousNode = null;
     }
 
     public Node(Node other){
@@ -33,6 +35,14 @@ public class Node {
 
     public void setNode(WayPoints node){
         this.node = node;
+    }
+    
+    public WayPoints getPreviousNode(){
+        return this.previousNode;
+    }
+
+    public void setPreviousNode(WayPoints node){
+        this.previousNode = node;
     }
 
     public ArrayList<WayPoints> getNeighbour(){
