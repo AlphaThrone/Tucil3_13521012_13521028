@@ -3,7 +3,7 @@ package Algorithm;
 
 public class DistanceCalculate{
 
-	public static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+	public static double distance(double lat1, double lon1, double lat2, double lon2) {
 		if ((lat1 == lat2) && (lon1 == lon2)) {
 			return 0;
 		}
