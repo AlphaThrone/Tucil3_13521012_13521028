@@ -1,8 +1,7 @@
 package Main;
 
 import java.util.*;
-import waypoint.WayPoints;
-import waypoint.WaypointRender;
+
 import javax.swing.event.MouseInputListener;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
@@ -72,7 +71,7 @@ public class Main extends javax.swing.JFrame {
 
         jXMapViewer = new org.jxmapviewer.JXMapViewer();
         comboMapType = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        cmdAdd = new javax.swing.JButton();
         cmdClear = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -84,8 +83,8 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Add Waypoint");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        cmdAdd.setText("Add Waypoint");
+        cmdAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdAddActionPerformed(evt);
             }
@@ -103,7 +102,7 @@ public class Main extends javax.swing.JFrame {
         jXMapViewerLayout.setHorizontalGroup(
             jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jXMapViewerLayout.createSequentialGroup()
-                .addComponent(jButton1)
+                .addComponent(cmdAdd)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cmdClear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 679, Short.MAX_VALUE)
@@ -114,7 +113,7 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jXMapViewerLayout.createSequentialGroup()
                 .addGroup(jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
+                    .addComponent(cmdAdd)
                     .addComponent(cmdClear))
                 .addGap(0, 633, Short.MAX_VALUE))
         );
@@ -190,9 +189,9 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cmdAdd;
     private javax.swing.JButton cmdClear;
     private javax.swing.JComboBox<String> comboMapType;
-    private javax.swing.JButton jButton1;
     private org.jxmapviewer.JXMapViewer jXMapViewer;
     // End of variables declaration//GEN-END:variables
 }
