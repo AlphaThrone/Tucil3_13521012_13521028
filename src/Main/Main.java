@@ -97,8 +97,9 @@ public class Main extends javax.swing.JFrame {
                 panel.add(new JLabel("Latitude : " + waypoint.getPosition().getLatitude()));
                 panel.add(new JLabel("Longitude: "+ waypoint.getPosition().getLongitude()));
                 result = JOptionPane.showOptionDialog(null, panel, "Enter a Number",
-                    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+                    JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
                     null, options1, null);
+                System.out.println(result);
                 if(result == 0){
                     waypoint.setPointType(PointType.START);
                 } else {
