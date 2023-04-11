@@ -1,16 +1,16 @@
 package Algorithm;
 
+import Main.WayPoints;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.jxmapviewer.JXMapViewer;
-import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.painter.Painter;
 
 /**
@@ -22,16 +22,16 @@ public class Graph implements Painter<JXMapViewer>
     private Color color = Color.RED;
     private boolean antiAlias = true;
 
-    private List<GeoPosition> track;
+    private Set<WayPoints> track;
 
     /**
      * @param track the track
      */
-    public Graph(List<GeoPosition> track)
+    public Graph(Set<WayPoints> track)
     {
         // copy the list so that changes in the 
         // original list do not have an effect here
-        this.track = new ArrayList<GeoPosition>(track);
+        this.track = new HashSet<WayPoints>(track);
     }
 
     @Override
@@ -72,10 +72,10 @@ public class Graph implements Painter<JXMapViewer>
 
         boolean first = true;
 
-        for (GeoPosition gp : track)
+        for (WayPoints gp : track)
         {
             // convert geo-coordinate to world bitmap pixel
-            Point2D pt = map.getTileFactory().geoToPixel(gp, map.getZoom());
+            Point2D pt = map.getTileFactory().geoToPixel(gp.getPosition(), map.getZoom());
 
             if (first)
             {

@@ -10,13 +10,18 @@ import javax.swing.event.MouseInputListener;
 
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
+import org.jxmapviewer.painter.CompoundPainter;
+import org.jxmapviewer.painter.Painter;
+import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.WaypointPainter;
+import org.jxmapviewer.viewer.Waypoint;
 
 import Algorithm.FileReader;
+import Algorithm.Graph;
 import Algorithm.Node;
 import Main.WayPoints.PointType;
 
@@ -119,7 +124,7 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jXMapViewer = new org.jxmapviewer.JXMapViewer();
+        jXMapViewer = new JXMapViewer();
         comboMapType = new javax.swing.JComboBox<>();
         cmdClear = new javax.swing.JButton();
         chooseFile = new javax.swing.JButton();
@@ -216,6 +221,19 @@ public class Main extends javax.swing.JFrame {
             for (Node nodeFile : file.getNodes()) {
                 addWaypoint(new WayPoints(nodeFile.getNode().getName(), PointType.NODE, event, nodeFile.getNode().getPosition()));
             }
+            Graph graph = new Graph(waypoints);
+
+            // Create a waypoint painter that takes all the waypoints
+            WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<Waypoint>();
+            waypointPainter.setWaypoints(waypoints);
+
+            // Create a compound painter that uses both the route-painter and the waypoint-painter
+            List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
+            painters.add(graph);
+            painters.add(waypointPainter);
+
+            CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+            jXMapViewer.setOverlayPainter(painter);
         }
 
     }//GEN-LAST:event_chooseFileActionPerformed
@@ -255,6 +273,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton chooseFile;
     private javax.swing.JButton cmdClear;
     private javax.swing.JComboBox<String> comboMapType;
-    private org.jxmapviewer.JXMapViewer jXMapViewer;
+    private JXMapViewer jXMapViewer;
     // End of variables declaration//GEN-END:variables
 }
