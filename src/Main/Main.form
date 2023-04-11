@@ -34,6 +34,9 @@
   </Layout>
   <SubComponents>
     <Container class="org.jxmapviewer.JXMapViewer" name="jXMapViewer">
+      <Events>
+        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jXMapViewerMouseReleased"/>
+      </Events>
 
       <Layout>
         <DimensionLayout dim="0">

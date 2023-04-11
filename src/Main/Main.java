@@ -3,6 +3,7 @@ package Main;
 import java.util.*;
 
 import javax.swing.JFileChooser;
+import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputListener;
@@ -16,14 +17,18 @@ import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.WaypointPainter;
 
 import Algorithm.FileReader;
+import Algorithm.Node;
+import Main.WayPoints.PointType;
 
 import org.jxmapviewer.VirtualEarthTileFactoryInfo;
 
 public class Main extends javax.swing.JFrame {
-    static JLabel l;
+    private static final Object[] options1 = { "Start", "End"};
     private final Set<WayPoints> waypoints = new HashSet<WayPoints>();
     private EventWaypoint event;
-
+    private JPanel panel;
+    private int result;
+    static JLabel l;
 
     public Main() {
         initComponents();
@@ -52,12 +57,25 @@ public class Main extends javax.swing.JFrame {
         for (WayPoints i : waypoints) {
             jXMapViewer.add(i.getButton());
         }
+        GeoPosition start = null;
+        GeoPosition end = null;
+        for (WayPoints w : waypoints) {
+            if(w.getPointType() == WayPoints.PointType.START){
+                start = w.getPosition();
+            } else if (w.getPointType() == WayPoints.PointType.END){
+                end = w.getPosition();
+            }
+        }
+        if(start!=null && end!=null){
+            //milih algo
+        }
     }
 
     private void addWaypoint(WayPoints waypoint){
         for (WayPoints i : waypoints) {
             jXMapViewer.remove(i.getButton());
         }
+
         waypoints.add(waypoint);
         initWaypoint();
     }
@@ -74,10 +92,22 @@ public class Main extends javax.swing.JFrame {
         return new EventWaypoint() {
             @Override
             public void selected(WayPoints waypoint){
-                JOptionPane.showMessageDialog(Main.this, waypoint.getName());
+                panel = new JPanel();
+                panel.add(new JLabel(waypoint.getName()));
+                panel.add(new JLabel("Latitude : " + waypoint.getPosition().getLatitude()));
+                panel.add(new JLabel("Longitude: "+ waypoint.getPosition().getLongitude()));
+                result = JOptionPane.showOptionDialog(null, panel, "Enter a Number",
+                    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+                    null, options1, null);
+                if(result == 0){
+                    waypoint.setPointType(PointType.START);
+                } else {
+                    waypoint.setPointType(PointType.END);
+                }
             }
         };
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -181,8 +211,8 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_comboMapTypeActionPerformed
 
     private void cmdAddActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        addWaypoint(new WayPoints("Test 1", event,new GeoPosition(-6.893442,107.6097034)));
-        addWaypoint(new WayPoints("Test 2", event,new GeoPosition(50,  7, 0, 8, 41, 0)));
+        addWaypoint(new WayPoints("Test 1", PointType.NODE ,event, new GeoPosition(-6.893442,107.6097034)));
+        addWaypoint(new WayPoints("Test 2", PointType.NODE, event, new GeoPosition(50,  7, 0, 8, 41, 0)));
     }                                      
 
     private void cmdClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdClearActionPerformed
@@ -197,7 +227,13 @@ public class Main extends javax.swing.JFrame {
         if(response == JFileChooser.APPROVE_OPTION){
             FileReader file = new FileReader();
             file.read(j.getSelectedFile().getAbsolutePath());
+            jXMapViewer.setAddressLocation(file.getMapLocation());
+            jXMapViewer.setZoom(file.getZoom());
+            for (Node nodeFile : file.getNodes()) {
+                addWaypoint(new WayPoints(nodeFile.getNode().getName(), PointType.NODE, event, nodeFile.getNode().getPosition()));
+            }
         }
+
     }//GEN-LAST:event_chooseFileActionPerformed
 
     /**

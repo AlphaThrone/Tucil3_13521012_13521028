@@ -6,6 +6,7 @@ import org.jxmapviewer.viewer.GeoPosition;
 
 import Main.EventWaypoint;
 import Main.WayPoints;
+import Main.WayPoints.PointType;
 
 public class Node {
     private WayPoints node;
@@ -16,7 +17,7 @@ public class Node {
 
     public Node(String name, EventWaypoint event ,Double latitude, Double longitude){
         GeoPosition temp = new GeoPosition(latitude, longitude);
-        node = new WayPoints(name, event, temp);
+        node = new WayPoints(name, PointType.NODE ,event, temp);
         neighbourNodes = new ArrayList<WayPoints>();
         distanceNeighbour = new ArrayList<Double>();
         straightDistance = new ArrayList<Double>();
