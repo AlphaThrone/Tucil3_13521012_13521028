@@ -45,6 +45,7 @@ public class FileReader extends Input{
                 listAllNode.add(new Node(readfile.next(), null, Double.parseDouble(readfile.next()), Double.parseDouble(readfile.next())));
                 i++;
             }
+            i=0;
             for (Node node : listAllNode) {
                 node.printNode();
             }

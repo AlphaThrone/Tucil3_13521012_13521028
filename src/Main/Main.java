@@ -18,7 +18,6 @@ import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.WaypointPainter;
-import org.jxmapviewer.viewer.Waypoint;
 
 import Algorithm.FileReader;
 import Algorithm.Graph;
@@ -30,6 +29,7 @@ import org.jxmapviewer.VirtualEarthTileFactoryInfo;
 public class Main extends javax.swing.JFrame {
     private static final Object[] options1 = { "Start", "End"};
     private final Set<WayPoints> waypoints = new HashSet<WayPoints>();
+    private WaypointPainter<WayPoints> wp = new WaypointRender();
     private EventWaypoint event;
     private JPanel panel;
     private int result;
@@ -56,7 +56,7 @@ public class Main extends javax.swing.JFrame {
     }
     
     private void initWaypoint(){
-        WaypointPainter<WayPoints> wp = new WaypointRender();
+        wp = new WaypointRender();
         wp.setWaypoints(waypoints);
         jXMapViewer.setOverlayPainter(wp);
         for (WayPoints i : waypoints) {
@@ -223,17 +223,14 @@ public class Main extends javax.swing.JFrame {
             }
             Graph graph = new Graph(waypoints);
 
-            // Create a waypoint painter that takes all the waypoints
-            WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<Waypoint>();
-            waypointPainter.setWaypoints(waypoints);
-
             // Create a compound painter that uses both the route-painter and the waypoint-painter
             List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
             painters.add(graph);
-            painters.add(waypointPainter);
+            painters.add(wp);
 
             CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
             jXMapViewer.setOverlayPainter(painter);
+            
         }
 
     }//GEN-LAST:event_chooseFileActionPerformed

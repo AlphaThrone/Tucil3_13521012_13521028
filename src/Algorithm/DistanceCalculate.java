@@ -1,22 +1,23 @@
 package Algorithm;
 
+import org.jxmapviewer.viewer.GeoPosition;
 
 public class DistanceCalculate{
 
     private static final double DISTANCE_CONST = 111.18957696;
 
-	public static double distance(double lat1, double lon1, double lat2, double lon2) {
-		if ((lat1 == lat2) && (lon1 == lon2)) {
+	public static double distance(GeoPosition pos1, GeoPosition pos2) {
+		if ((pos1.getLatitude() == pos2.getLatitude()) && (pos1.getLongitude() == pos2.getLongitude())) {
 			return 0;
 		}
 		else {
-			double theta = lon1 - lon2;
-			double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) 
-                        * Math.cos(Math.toRadians(lat2)) 
+			double theta = pos1.getLongitude() - pos2.getLongitude();
+			double dist = Math.sin(Math.toRadians(pos1.getLatitude())) * Math.sin(Math.toRadians(pos2.getLatitude())) + Math.cos(Math.toRadians(pos1.getLatitude())) 
+                        * Math.cos(Math.toRadians(pos2.getLatitude())) 
                         * Math.cos(Math.toRadians(theta));
 			dist = Math.acos(dist);
 			dist = Math.toDegrees(dist);
-			dist = dist * DISTANCE_CONST;
+			dist = dist * DISTANCE_CONST*1000;/*satuan meter*/
 			return (dist);
 		}
 	}

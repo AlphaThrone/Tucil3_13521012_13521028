@@ -13,10 +13,8 @@ import java.util.*;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.painter.Painter;
 
-/**
- * Paints a route
- * @author Martin Steiger
- */
+
+
 public class Graph implements Painter<JXMapViewer>
 {
     private Color color = Color.RED;
@@ -31,7 +29,7 @@ public class Graph implements Painter<JXMapViewer>
     {
         // copy the list so that changes in the 
         // original list do not have an effect here
-        this.track = new HashSet<WayPoints>(track);
+        this.track = track;
     }
 
     @Override
