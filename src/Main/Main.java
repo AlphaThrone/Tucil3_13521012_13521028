@@ -120,7 +120,6 @@ public class Main extends javax.swing.JFrame {
 
         jXMapViewer = new org.jxmapviewer.JXMapViewer();
         comboMapType = new javax.swing.JComboBox<>();
-        cmdAdd = new javax.swing.JButton();
         cmdClear = new javax.swing.JButton();
         chooseFile = new javax.swing.JButton();
 
@@ -133,14 +132,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        cmdAdd.setText("Add Waypoint");
-        cmdAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdAddActionPerformed(evt);
-            }
-        });
-
-        cmdClear.setText("Clear Waypoint");
+        cmdClear.setText("Clear");
         cmdClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdClearActionPerformed(evt);
@@ -159,12 +151,10 @@ public class Main extends javax.swing.JFrame {
         jXMapViewerLayout.setHorizontalGroup(
             jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jXMapViewerLayout.createSequentialGroup()
-                .addGroup(jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(chooseFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmdAdd, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(chooseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cmdClear)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 679, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 718, Short.MAX_VALUE)
                 .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jXMapViewerLayout.setVerticalGroup(
@@ -172,11 +162,9 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jXMapViewerLayout.createSequentialGroup()
                 .addGroup(jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmdAdd)
-                    .addComponent(cmdClear))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(chooseFile)
-                .addGap(0, 598, Short.MAX_VALUE))
+                    .addComponent(cmdClear)
+                    .addComponent(chooseFile))
+                .addGap(0, 633, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -209,12 +197,7 @@ public class Main extends javax.swing.JFrame {
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
         jXMapViewer.setTileFactory(tileFactory);
     }//GEN-LAST:event_comboMapTypeActionPerformed
-
-    private void cmdAddActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        addWaypoint(new WayPoints("Test 1", PointType.NODE ,event, new GeoPosition(-6.893442,107.6097034)));
-        addWaypoint(new WayPoints("Test 2", PointType.NODE, event, new GeoPosition(50,  7, 0, 8, 41, 0)));
-    }                                      
-
+                      
     private void cmdClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdClearActionPerformed
         clearWaypoint();
     }//GEN-LAST:event_cmdClearActionPerformed
@@ -269,7 +252,6 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton chooseFile;
-    private javax.swing.JButton cmdAdd;
     private javax.swing.JButton cmdClear;
     private javax.swing.JComboBox<String> comboMapType;
     private org.jxmapviewer.JXMapViewer jXMapViewer;

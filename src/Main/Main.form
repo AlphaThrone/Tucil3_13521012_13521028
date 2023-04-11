@@ -42,13 +42,10 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="chooseFile" alignment="0" max="32767" attributes="0"/>
-                      <Component id="cmdAdd" alignment="0" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="chooseFile" min="-2" pref="106" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="cmdClear" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="679" max="32767" attributes="0"/>
+                  <EmptySpace pref="718" max="32767" attributes="0"/>
                   <Component id="comboMapType" min="-2" pref="135" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -58,12 +55,10 @@
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="comboMapType" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmdAdd" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cmdClear" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="chooseFile" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="chooseFile" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="598" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="633" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -87,17 +82,9 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JButton" name="cmdAdd">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Add Waypoint"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdAddActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="cmdClear">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Clear Waypoint"/>
+            <Property name="text" type="java.lang.String" value="Clear"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdClearActionPerformed"/>
