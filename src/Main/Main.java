@@ -17,25 +17,14 @@ import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
-import org.jxmapviewer.viewer.Waypoint;
-import org.jxmapviewer.viewer.WaypointPainter;
 
 import Algorithm.FileReader;
 import Algorithm.Graph;
 import Algorithm.Node;
 import Main.WayPoints.PointType;
-import Algorithm.DistanceCalculate;
 import Algorithm.UCS;
 import Algorithm.AStar;
 import Algorithm.WaypointPainterList;
-import Algorithm.Algorithm_AStar;
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.geom.Point2D;
 
 import org.jxmapviewer.VirtualEarthTileFactoryInfo;
 

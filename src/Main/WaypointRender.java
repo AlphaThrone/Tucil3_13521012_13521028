@@ -1,7 +1,6 @@
 package Main;
 
 import org.jxmapviewer.JXMapViewer;
-import org.jxmapviewer.viewer.WaypointPainter;
 
 import Algorithm.WaypointPainterList;
 

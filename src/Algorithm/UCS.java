@@ -83,10 +83,6 @@ public class UCS {
             return id;
         }
 
-        public double getCost() {
-            return cost;
-        }
-
         @Override
         public int compareTo(Node o) {
             return Double.compare(this.cost, o.cost);

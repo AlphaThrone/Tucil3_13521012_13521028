@@ -17,7 +17,6 @@ import org.jxmapviewer.painter.Painter;
 
 public class Graph implements Painter<JXMapViewer>
 {
-    private Color color = Color.RED;
     private boolean antiAlias = true;
 
     private List<WayPoints> track;

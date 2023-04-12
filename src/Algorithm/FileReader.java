@@ -64,7 +64,6 @@ public class FileReader extends Input{
                 }
                 i++;
             }
-            this.adjacencyMatrix = adjacencyMatrix;
 
             // // Print isi this.adjacencyMatrix
             // for (int k=0; k<count; k++) {
