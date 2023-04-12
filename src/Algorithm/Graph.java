@@ -54,7 +54,7 @@ public class Graph implements Painter<JXMapViewer>
         
         if (warna == true) {
             g.setColor(Color.RED);
-            g.setStroke(new BasicStroke(2));
+            g.setStroke(new BasicStroke(4));
             drawRoute(g, map);
         }
         // // do the drawing again
