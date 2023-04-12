@@ -8,6 +8,9 @@ import org.jxmapviewer.viewer.GeoPosition;
 
 public class FileReader extends Input{
     private ArrayList<Node> listAllNode;
+
+    // Buat atribut untuk adjacencymatrix
+    private ArrayList<ArrayList<Double>> adjacencyMatrix;
     private GeoPosition locMap;
     private int zoom;
     private int count;
@@ -19,6 +22,10 @@ public class FileReader extends Input{
 
     public ArrayList<Node> getNodes(){
         return listAllNode;
+    }
+
+    public ArrayList<ArrayList<Double>> getAdjacencyMatrix(){
+        return adjacencyMatrix;
     }
 
     public int getNodeCount(){
@@ -42,13 +49,31 @@ public class FileReader extends Input{
             this.zoom = Integer.parseInt(readfile.next());
             int i=0;
             while (i<count) {
-                listAllNode.add(new Node(readfile.next(), null, Double.parseDouble(readfile.next()), Double.parseDouble(readfile.next())));
+                listAllNode.add(new Node(readfile.next(), null, Double.parseDouble(readfile.next()), Double.parseDouble(readfile.next()), i));
                 i++;
             }
             i=0;
-            for (Node node : listAllNode) {
-                node.printNode();
+            // Baca adjacency matrix
+            adjacencyMatrix = new ArrayList<ArrayList<Double>>();
+            while (i<count) {
+                adjacencyMatrix.add(new ArrayList<Double>());
+                int j=0;
+                while (j<count) {
+                    adjacencyMatrix.get(i).add(readfile.nextDouble());
+                    j++;
+                }
+                i++;
             }
+            this.adjacencyMatrix = adjacencyMatrix;
+
+            // // Print isi this.adjacencyMatrix
+            // for (int k=0; k<count; k++) {
+            //     for (int l=0; l<count; l++) {
+            //         System.out.print(this.adjacencyMatrix.get(k).get(l) + " ");
+            //     }
+            //     System.out.println();
+            // }
+
             readfile.close();
         } catch (FileNotFoundException e){
             e.fillInStackTrace();

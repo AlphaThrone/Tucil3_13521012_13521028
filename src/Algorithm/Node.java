@@ -15,9 +15,9 @@ public class Node {
     private ArrayList<Double> straightDistance;
     private WayPoints previousNode;
 
-    public Node(String name, EventWaypoint event ,Double latitude, Double longitude){
+    public Node(String name, EventWaypoint event ,Double latitude, Double longitude, int idx){
         GeoPosition temp = new GeoPosition(latitude, longitude);
-        node = new WayPoints(name, PointType.NODE ,event, temp);
+        node = new WayPoints(name, PointType.NODE ,event, temp, idx);
         neighbourNodes = new ArrayList<WayPoints>();
         distanceNeighbour = new ArrayList<Double>();
         straightDistance = new ArrayList<Double>();
@@ -74,4 +74,5 @@ public class Node {
     public void printNode(){
         System.out.println(node.getName() + node.getPosition().getLatitude() + node.getPosition().getLongitude());
     }
+
 }

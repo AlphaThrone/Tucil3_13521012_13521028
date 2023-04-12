@@ -20,21 +20,23 @@ public class Graph implements Painter<JXMapViewer>
     private Color color = Color.RED;
     private boolean antiAlias = true;
 
-    private Set<WayPoints> track;
+    private List<WayPoints> track;
+    private ArrayList<ArrayList<Double>> adjMatrix;
 
     /**
      * @param track the track
      */
-    public Graph(Set<WayPoints> track)
+    public Graph(List<WayPoints> track, ArrayList<ArrayList<Double>> adjMatrix)
     {
-        // copy the list so that changes in the 
-        // original list do not have an effect here
         this.track = track;
+        this.adjMatrix = adjMatrix;
     }
+
 
     @Override
     public void paint(Graphics2D g, JXMapViewer map, int w, int h)
     {
+        System.out.println("Memanggil method paint");
         g = (Graphics2D) g.create();
 
         // convert from viewport to world bitmap
@@ -50,11 +52,11 @@ public class Graph implements Painter<JXMapViewer>
 
         drawRoute(g, map);
 
-        // do the drawing again
-        g.setColor(color);
-        g.setStroke(new BasicStroke(2));
+        // // do the drawing again
+        // g.setColor(color);
+        // g.setStroke(new BasicStroke(2));
 
-        drawRoute(g, map);
+        // drawRoute(g, map);
 
         g.dispose();
     }
@@ -65,27 +67,22 @@ public class Graph implements Painter<JXMapViewer>
      */
     private void drawRoute(Graphics2D g, JXMapViewer map)
     {
-        int lastX = 0;
-        int lastY = 0;
-
-        boolean first = true;
-
-        for (WayPoints gp : track)
+        // Gambarkan garis dari node ke node yang lainnya jika bertetangga
+        for (int i = 0; i < adjMatrix.size(); i++)
         {
-            // convert geo-coordinate to world bitmap pixel
-            Point2D pt = map.getTileFactory().geoToPixel(gp.getPosition(), map.getZoom());
-
-            if (first)
+            for (int j = 0; j < adjMatrix.get(i).size(); j++)
             {
-                first = false;
-            }
-            else
-            {
-                g.drawLine(lastX, lastY, (int) pt.getX(), (int) pt.getY());
-            }
+                if (adjMatrix.get(i).get(j) != 0)
+                {
+                    Point2D pt1 = map.getTileFactory().geoToPixel(track.get(i).getPosition(), map.getZoom());
+                    Point2D pt2 = map.getTileFactory().geoToPixel(track.get(j).getPosition(), map.getZoom());
 
-            lastX = (int) pt.getX();
-            lastY = (int) pt.getY();
+                    g.drawLine((int) pt1.getX(), (int) pt1.getY(), (int) pt2.getX(), (int) pt2.getY());
+                }
+            }
         }
+
     }
+
+
 }

@@ -30,7 +30,7 @@ public class WayPoints extends DefaultWaypoint{
         /*Empty*/
     }
 
-    public WayPoints(String name, PointType pointType, EventWaypoint event, GeoPosition coordinate){
+    public WayPoints(String name, PointType pointType, EventWaypoint event, GeoPosition coordinate, int indeks){
         super(coordinate);
         this.name = name;
         this.pointType = pointType;

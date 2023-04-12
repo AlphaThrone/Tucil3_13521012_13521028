@@ -17,12 +17,21 @@ import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
+import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
 
 import Algorithm.FileReader;
 import Algorithm.Graph;
 import Algorithm.Node;
 import Main.WayPoints.PointType;
+import Algorithm.DistanceCalculate;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.geom.Point2D;
 
 import org.jxmapviewer.VirtualEarthTileFactoryInfo;
 
@@ -124,14 +133,38 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jXMapViewer = new JXMapViewer();
+        jXMapViewer = new org.jxmapviewer.JXMapViewer();
+        chooseFile = new javax.swing.JButton();
         comboMapType = new javax.swing.JComboBox<>();
         cmdClear = new javax.swing.JButton();
-        chooseFile = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        comboMapType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Open Stree", "Virtual Earth", "Hybrid", "Satellite" }));
+        // jXMapViewer.addMouseListener(new java.awt.event.MouseAdapter() {
+        //     public void mouseReleased(java.awt.event.MouseEvent evt) {
+        //         jXMapViewerMouseReleased(evt);
+        //     }
+        // });
+
+        javax.swing.GroupLayout jXMapViewerLayout = new javax.swing.GroupLayout(jXMapViewer);
+        jXMapViewer.setLayout(jXMapViewerLayout);
+        jXMapViewerLayout.setHorizontalGroup(
+            jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 925, Short.MAX_VALUE)
+        );
+        jXMapViewerLayout.setVerticalGroup(
+            jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 842, Short.MAX_VALUE)
+        );
+
+        chooseFile.setText("Choose File");
+        chooseFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chooseFileActionPerformed(evt);
+            }
+        });
+
+        comboMapType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Open Street", "Virtual Earth", "Hybrid", "Satellite" }));
         comboMapType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboMapTypeActionPerformed(evt);
@@ -145,43 +178,30 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        chooseFile.setText("Choose File");
-        chooseFile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chooseFileActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jXMapViewerLayout = new javax.swing.GroupLayout(jXMapViewer);
-        jXMapViewer.setLayout(jXMapViewerLayout);
-        jXMapViewerLayout.setHorizontalGroup(
-            jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jXMapViewerLayout.createSequentialGroup()
-                .addComponent(chooseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cmdClear)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 718, Short.MAX_VALUE)
-                .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        jXMapViewerLayout.setVerticalGroup(
-            jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jXMapViewerLayout.createSequentialGroup()
-                .addGroup(jXMapViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmdClear)
-                    .addComponent(chooseFile))
-                .addGap(0, 633, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jXMapViewer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(chooseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboMapType, 0, 107, Short.MAX_VALUE)
+                    .addComponent(cmdClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jXMapViewer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jXMapViewer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jXMapViewer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(chooseFile)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmdClear)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -208,6 +228,7 @@ public class Main extends javax.swing.JFrame {
         clearWaypoint();
     }//GEN-LAST:event_cmdClearActionPerformed
     
+    
     private void chooseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseFileActionPerformed
         JFileChooser j = new JFileChooser();
 
@@ -216,12 +237,63 @@ public class Main extends javax.swing.JFrame {
         if(response == JFileChooser.APPROVE_OPTION){
             FileReader file = new FileReader();
             file.read(j.getSelectedFile().getAbsolutePath());
+
+            // Output isi dari file
+            System.out.println("Nama File : " + j.getSelectedFile().getName());
+            System.out.println("Alamat : " + file.getMapLocation());
+            System.out.println("Zoom : " + file.getZoom());
+            System.out.println("Jumlah Node : " + file.getNodes().size());
+
             jXMapViewer.setAddressLocation(file.getMapLocation());
             jXMapViewer.setZoom(file.getZoom());
+            int idx = 0;
             for (Node nodeFile : file.getNodes()) {
-                addWaypoint(new WayPoints(nodeFile.getNode().getName(), PointType.NODE, event, nodeFile.getNode().getPosition()));
+                
+                addWaypoint(new WayPoints(nodeFile.getNode().getName(), PointType.NODE, event, nodeFile.getNode().getPosition(), idx));
+                idx++;
             }
-            Graph graph = new Graph(waypoints);
+
+            // Print adjacency matriks
+            System.out.println("Adjacency Matriks : ");
+
+            // Ngecek adjacency matriks
+            for (int i = 0; i < file.getNodes().size(); i++) {
+                for (int k = 0; k < file.getNodes().size(); k++) {
+                    System.out.print(file.getAdjacencyMatrix().get(i).get(k) + " ");
+                }
+                System.out.println("");
+            }
+
+            // Masukkan tetangga ke setiap node
+            for (int i = 0; i < file.getNodes().size(); i++) {
+                for (int k = 0; k < file.getNodes().size(); k++) {
+                    if (file.getAdjacencyMatrix().get(i).get(k) > 0) {
+                        Double dist = DistanceCalculate.distance(file.getNodes().get(i).getNode().getPosition(), file.getNodes().get(k).getNode().getPosition());
+                        file.getNodes().get(i).addNeighbour(file.getNodes().get(k).getPreviousNode(), file.getAdjacencyMatrix().get(i).get(k), dist);
+                    }
+                }
+            }
+
+            // Print Informasi setiap node
+            for (int i = 0; i < file.getNodes().size(); i++) {
+                System.out.println("Node " + file.getNodes().get(i).getNode().getName());
+                System.out.println("Posisi : " + file.getNodes().get(i).getNode().getPosition());
+                System.out.println("Jumlah tetangga : " + file.getNodes().get(i).getNeighbour().size());
+
+            }
+
+            // Menggambar graf yang sudah dibaca dari file
+            // WaypointPainter<WayPoints> wp = new WaypointPainter<WayPoints>();
+            // wp.setWaypoints(waypoints);
+            // jXMapViewer.setOverlayPainter(wp);
+            
+            List<WayPoints> waypointss = new ArrayList<WayPoints>();
+            // Isi waypointss dengan node
+            for (int i = 0; i < file.getNodes().size(); i++) {
+                waypointss.add(new WayPoints(file.getNodes().get(i).getNode().getName(), PointType.NODE, event, file.getNodes().get(i).getNode().getPosition(), i));
+            }
+
+            Graph graph = new Graph(waypointss, file.getAdjacencyMatrix());
 
             // Create a compound painter that uses both the route-painter and the waypoint-painter
             List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
@@ -230,10 +302,19 @@ public class Main extends javax.swing.JFrame {
 
             CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
             jXMapViewer.setOverlayPainter(painter);
+
+            
+            
+
+
+
+
+
             
         }
 
     }//GEN-LAST:event_chooseFileActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -270,6 +351,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton chooseFile;
     private javax.swing.JButton cmdClear;
     private javax.swing.JComboBox<String> comboMapType;
-    private JXMapViewer jXMapViewer;
+    private org.jxmapviewer.JXMapViewer jXMapViewer;
     // End of variables declaration//GEN-END:variables
 }
