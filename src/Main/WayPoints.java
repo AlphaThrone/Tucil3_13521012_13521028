@@ -11,6 +11,7 @@ public class WayPoints extends DefaultWaypoint{
     private String name;
     private JButton button;
     private PointType pointType;
+    private int idx;
 
     private void initButton(EventWaypoint event){
         button = new ButtonWaypoint();
@@ -22,6 +23,7 @@ public class WayPoints extends DefaultWaypoint{
         });
     }
 
+    
     public static enum PointType{
         START, END, NODE;
     }
@@ -34,6 +36,7 @@ public class WayPoints extends DefaultWaypoint{
         super(coordinate);
         this.name = name;
         this.pointType = pointType;
+        this.idx = indeks;
         initButton(event);
     }
 
@@ -59,5 +62,9 @@ public class WayPoints extends DefaultWaypoint{
 
     public void setPointType(PointType pointType){
         this.pointType = pointType;
+    }
+
+    public int getIdx(){
+        return this.idx;
     }
 }

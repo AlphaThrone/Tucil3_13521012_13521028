@@ -25,6 +25,8 @@ import Algorithm.Graph;
 import Algorithm.Node;
 import Main.WayPoints.PointType;
 import Algorithm.DistanceCalculate;
+import Algorithm.Algorithm_UCS;
+import Algorithm.Algorithm_AStar;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -43,6 +45,10 @@ public class Main extends javax.swing.JFrame {
     private JPanel panel;
     private int result;
     static JLabel l;
+    private List<WayPoints> waypointss = new ArrayList<WayPoints>();
+    private ArrayList<Node> listAllNode = new ArrayList<Node>();
+    private ArrayList<ArrayList<Double>> adjMatriks;
+    
 
     public Main() {
         initComponents();
@@ -137,6 +143,8 @@ public class Main extends javax.swing.JFrame {
         chooseFile = new javax.swing.JButton();
         comboMapType = new javax.swing.JComboBox<>();
         cmdClear = new javax.swing.JButton();
+        cmdUCS = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -178,16 +186,35 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        cmdUCS.setText("UCS");
+        cmdUCS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdUCSActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("A*");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(chooseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboMapType, 0, 107, Short.MAX_VALUE)
-                    .addComponent(cmdClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(chooseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboMapType, 0, 107, Short.MAX_VALUE)
+                            .addComponent(cmdClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(cmdUCS, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jXMapViewer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -201,6 +228,10 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(comboMapType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmdClear)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmdUCS)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -253,6 +284,8 @@ public class Main extends javax.swing.JFrame {
                 idx++;
             }
 
+            adjMatriks = file.getAdjacencyMatrix();
+
             // Print adjacency matriks
             System.out.println("Adjacency Matriks : ");
 
@@ -274,24 +307,12 @@ public class Main extends javax.swing.JFrame {
                 }
             }
 
-            // Print Informasi setiap node
-            for (int i = 0; i < file.getNodes().size(); i++) {
-                System.out.println("Node " + file.getNodes().get(i).getNode().getName());
-                System.out.println("Posisi : " + file.getNodes().get(i).getNode().getPosition());
-                System.out.println("Jumlah tetangga : " + file.getNodes().get(i).getNeighbour().size());
-
-            }
-
-            // Menggambar graf yang sudah dibaca dari file
-            // WaypointPainter<WayPoints> wp = new WaypointPainter<WayPoints>();
-            // wp.setWaypoints(waypoints);
-            // jXMapViewer.setOverlayPainter(wp);
-            
-            List<WayPoints> waypointss = new ArrayList<WayPoints>();
             // Isi waypointss dengan node
             for (int i = 0; i < file.getNodes().size(); i++) {
                 waypointss.add(new WayPoints(file.getNodes().get(i).getNode().getName(), PointType.NODE, event, file.getNodes().get(i).getNode().getPosition(), i));
             }
+
+            listAllNode = file.getNodes();
 
             Graph graph = new Graph(waypointss, file.getAdjacencyMatrix());
 
@@ -302,18 +323,40 @@ public class Main extends javax.swing.JFrame {
 
             CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
             jXMapViewer.setOverlayPainter(painter);
-
-            
-            
-
-
-
-
-
-            
         }
 
     }//GEN-LAST:event_chooseFileActionPerformed
+
+    private void cmdUCSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdUCSActionPerformed
+        // TODO add your handling code here:
+        // Cek apakah ada graph yang terbentuk dari file
+        
+        // Tulis informasi dari ListAllNode
+        System.out.println("List All Node : ");
+        for (int i = 0; i < listAllNode.size(); i++) {
+            System.out.println("Node " + listAllNode.get(i).getIdx() + " : " + listAllNode.get(i).getNode().getName());
+            System.out.println("Neighbour : ");
+            
+        }
+
+        if (waypointss.size() > 0) {
+            Graph graph = new Graph(waypointss, adjMatriks);
+            graph.warna = true;
+            
+
+            // Create a compound painter that uses both the route-painter and the waypoint-painter
+            List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
+            painters.add(graph);
+            painters.add(wp);
+
+            CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+            jXMapViewer.setOverlayPainter(painter);
+        }
+    }//GEN-LAST:event_cmdUCSActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     /**
@@ -350,7 +393,9 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton chooseFile;
     private javax.swing.JButton cmdClear;
+    private javax.swing.JButton cmdUCS;
     private javax.swing.JComboBox<String> comboMapType;
+    private javax.swing.JButton jButton1;
     private org.jxmapviewer.JXMapViewer jXMapViewer;
     // End of variables declaration//GEN-END:variables
 }

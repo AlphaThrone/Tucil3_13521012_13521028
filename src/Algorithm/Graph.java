@@ -23,6 +23,8 @@ public class Graph implements Painter<JXMapViewer>
     private List<WayPoints> track;
     private ArrayList<ArrayList<Double>> adjMatrix;
 
+    public Boolean warna = false;
+
     /**
      * @param track the track
      */
@@ -36,7 +38,6 @@ public class Graph implements Painter<JXMapViewer>
     @Override
     public void paint(Graphics2D g, JXMapViewer map, int w, int h)
     {
-        System.out.println("Memanggil method paint");
         g = (Graphics2D) g.create();
 
         // convert from viewport to world bitmap
@@ -51,7 +52,12 @@ public class Graph implements Painter<JXMapViewer>
         g.setStroke(new BasicStroke(4));
 
         drawRoute(g, map);
-
+        
+        if (warna == true) {
+            g.setColor(Color.RED);
+            g.setStroke(new BasicStroke(2));
+            drawRoute(g, map);
+        }
         // // do the drawing again
         // g.setColor(color);
         // g.setStroke(new BasicStroke(2));

@@ -37,6 +37,10 @@ public class Node {
     public void setNode(WayPoints node){
         this.node = node;
     }
+
+    public int getIdx(){
+        return this.node.getIdx();
+    }
     
     public WayPoints getPreviousNode(){
         return this.previousNode;
