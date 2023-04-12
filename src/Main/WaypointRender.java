@@ -2,12 +2,15 @@ package Main;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.WaypointPainter;
+
+import Algorithm.WaypointPainterList;
+
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import javax.swing.JButton;
 
-public class WaypointRender extends WaypointPainter<WayPoints>{
+public class WaypointRender extends WaypointPainterList<WayPoints>{
     
     @Override
     protected void doPaint(Graphics2D graph, JXMapViewer map, int width, int height){

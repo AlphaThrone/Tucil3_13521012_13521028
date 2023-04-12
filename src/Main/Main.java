@@ -25,7 +25,9 @@ import Algorithm.Graph;
 import Algorithm.Node;
 import Main.WayPoints.PointType;
 import Algorithm.DistanceCalculate;
-import Algorithm.Algorithm_UCS;
+import Algorithm.UCS;
+import Algorithm.AStar;
+import Algorithm.WaypointPainterList;
 import Algorithm.Algorithm_AStar;
 
 import java.awt.BasicStroke;
@@ -39,16 +41,19 @@ import org.jxmapviewer.VirtualEarthTileFactoryInfo;
 
 public class Main extends javax.swing.JFrame {
     private static final Object[] options1 = { "Start", "End"};
-    private final Set<WayPoints> waypoints = new HashSet<WayPoints>();
-    private WaypointPainter<WayPoints> wp = new WaypointRender();
+    // private final Set<WayPoints> waypoints = new HashSet<WayPoints>();
+    private WaypointPainterList<WayPoints> wp = new WaypointRender();
     private EventWaypoint event;
     private JPanel panel;
     private int result;
     static JLabel l;
-    private List<WayPoints> waypointss = new ArrayList<WayPoints>();
+    private List<WayPoints> waypoints = new ArrayList<WayPoints>();
     private ArrayList<Node> listAllNode = new ArrayList<Node>();
     private ArrayList<ArrayList<Double>> adjMatriks;
+    int start = -1;
+    int end = -1;
     
+    private List<Painter<JXMapViewer>> painters;
 
     public Main() {
         initComponents();
@@ -77,18 +82,7 @@ public class Main extends javax.swing.JFrame {
         for (WayPoints i : waypoints) {
             jXMapViewer.add(i.getButton());
         }
-        GeoPosition start = null;
-        GeoPosition end = null;
-        for (WayPoints w : waypoints) {
-            if(w.getPointType() == WayPoints.PointType.START){
-                start = w.getPosition();
-            } else if (w.getPointType() == WayPoints.PointType.END){
-                end = w.getPosition();
-            }
-        }
-        if(start!=null && end!=null){
-            //milih algo
-        }
+        
     }
 
     private void addWaypoint(WayPoints waypoint){
@@ -105,6 +99,8 @@ public class Main extends javax.swing.JFrame {
             jXMapViewer.remove(i.getButton());
         }
         waypoints.clear();
+        start = -1;
+        end = -1;
         initWaypoint();
     }
 
@@ -121,9 +117,14 @@ public class Main extends javax.swing.JFrame {
                     null, options1, null);
                 System.out.println(result);
                 if(result == 0){
-                    waypoint.setPointType(PointType.START);
+                    start = waypoints.indexOf(waypoint);
+                    // Ubah warna waypoint menjadi hijau
+
+                } else if(result == 1){
+                    end = waypoints.indexOf(waypoint);
+                    // waypoint.setPointType(PointType.END);
                 } else {
-                    waypoint.setPointType(PointType.END);
+
                 }
             }
         };
@@ -297,27 +298,19 @@ public class Main extends javax.swing.JFrame {
                 System.out.println("");
             }
 
-            // Masukkan tetangga ke setiap node
+            // Isi waypoints dengan node
             for (int i = 0; i < file.getNodes().size(); i++) {
-                for (int k = 0; k < file.getNodes().size(); k++) {
-                    if (file.getAdjacencyMatrix().get(i).get(k) > 0) {
-                        Double dist = DistanceCalculate.distance(file.getNodes().get(i).getNode().getPosition(), file.getNodes().get(k).getNode().getPosition());
-                        file.getNodes().get(i).addNeighbour(file.getNodes().get(k).getPreviousNode(), file.getAdjacencyMatrix().get(i).get(k), dist);
-                    }
-                }
+                waypoints.add(new WayPoints(file.getNodes().get(i).getNode().getName(), PointType.NODE, event, file.getNodes().get(i).getNode().getPosition(), i));
             }
 
-            // Isi waypointss dengan node
-            for (int i = 0; i < file.getNodes().size(); i++) {
-                waypointss.add(new WayPoints(file.getNodes().get(i).getNode().getName(), PointType.NODE, event, file.getNodes().get(i).getNode().getPosition(), i));
-            }
+            this.listAllNode = file.getNodes();
 
-            listAllNode = file.getNodes();
+            // Print semua node beserta informasi berapa banyak tetangganya
 
-            Graph graph = new Graph(waypointss, file.getAdjacencyMatrix());
+            Graph graph = new Graph(waypoints, file.getAdjacencyMatrix());
 
             // Create a compound painter that uses both the route-painter and the waypoint-painter
-            List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
+            painters = new ArrayList<Painter<JXMapViewer>>();
             painters.add(graph);
             painters.add(wp);
 
@@ -330,32 +323,145 @@ public class Main extends javax.swing.JFrame {
     private void cmdUCSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdUCSActionPerformed
         // TODO add your handling code here:
         // Cek apakah ada graph yang terbentuk dari file
-        
-        // Tulis informasi dari ListAllNode
-        System.out.println("List All Node : ");
-        for (int i = 0; i < listAllNode.size(); i++) {
-            System.out.println("Node " + listAllNode.get(i).getIdx() + " : " + listAllNode.get(i).getNode().getName());
-            System.out.println("Neighbour : ");
-            
+        if ((start == -1) || (end == -1)) {
+            JPanel panel = new JPanel();
+            panel.add(new JLabel("Pilih dahulu titik awal atau titik akhir!"));
+            JOptionPane.showMessageDialog(null, panel, "Peringatan!", JOptionPane.PLAIN_MESSAGE);
         }
 
-        if (waypointss.size() > 0) {
-            Graph graph = new Graph(waypointss, adjMatriks);
+        if (waypoints.size() > 0) {
+            UCS algo = new UCS(listAllNode.size());
+            
+            for (int i = 0; i < adjMatriks.size(); i++) {
+                for (int j = 0; j < adjMatriks.size(); j++) {
+
+                    algo.addEdge(i, j, adjMatriks.get(i).get(j));
+                   
+                }
+            }
+
+            System.out.println("Sebelum UCS");
+            // Cari jalur terpendek
+            List<Integer> path = algo.ucs(start, end    );
+
+            // Print jalur terpendek
+            System.out.println("Jalur terpendek : ");
+            for (int i = 0; i < path.size(); i++) {
+                System.out.print(path.get(i) + " ");
+            }
+            
+            ArrayList<ArrayList<Double>> pathNode = new ArrayList<ArrayList<Double>>();
+            //  Awalnya isi semua elemen pada pathNode adalah 0
+            for (int i = 0; i < listAllNode.size(); i++) {
+                pathNode.add(new ArrayList<Double>());
+            }
+
+            for (int i = 0; i < listAllNode.size(); i++) {
+                for (int j = 0; j < listAllNode.size(); j++) {
+                    pathNode.get(i).add(0.0);
+                }
+            }
+
+            for (int i = 0; i < path.size() - 1 ; i++) {
+                pathNode.get(path.get(i)).set(path.get(i + 1), 1.0);
+            }
+
+            // Coba print pathNode
+            System.out.println("Path Node : ");
+            for (int i = 0; i < pathNode.size(); i++) {
+                for (int j = 0; j < pathNode.size(); j++) {
+                    System.out.print(pathNode.get(i).get(j) + " ");
+                }
+                System.out.println("");
+            }
+
+
+            Graph graph = new Graph(waypoints, pathNode);
             graph.warna = true;
             
+            System.out.println("Selesai 2");
 
             // Create a compound painter that uses both the route-painter and the waypoint-painter
-            List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
+            // List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
+            painters.add(graph);
+            painters.add(wp);
+
+            CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+            jXMapViewer.setOverlayPainter(painter);
+
+            
+        }
+    }//GEN-LAST:event_cmdUCSActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        // TODO add your handling code here:
+        // Cek apakah ada graph yang terbentuk dari file
+        if ((start == -1) || (end == -1)) {
+            JPanel panel = new JPanel();
+            panel.add(new JLabel("Pilih dahulu titik awal atau titik akhir!"));
+            JOptionPane.showMessageDialog(null, panel, "Peringatan!", JOptionPane.PLAIN_MESSAGE);
+        }
+
+        if (waypoints.size() > 0) {
+            double[][] adjM = new double[adjMatriks.size()][adjMatriks.size()];
+            for (int i = 0; i < adjMatriks.size(); i++) {
+                for (int j = 0; j < adjMatriks.size(); j++) {
+                    adjM[i][j] = adjMatriks.get(i).get(j);
+                }
+            }
+
+            AStar algo = new AStar(adjM);
+
+            System.out.println("Sebelum UCS");
+            // Cari jalur terpendek
+            ArrayList<Integer> path = algo.findShortestPath(start, end);
+
+            // Print jalur terpendek
+            System.out.println("Jalur terpendek : ");
+            for (int i = 0; i < path.size(); i++) {
+                System.out.print(path.get(i) + " ");
+            }
+            
+            ArrayList<ArrayList<Double>> pathNode = new ArrayList<ArrayList<Double>>();
+            //  Awalnya isi semua elemen pada pathNode adalah 0
+            for (int i = 0; i < listAllNode.size(); i++) {
+                pathNode.add(new ArrayList<Double>());
+            }
+
+            for (int i = 0; i < listAllNode.size(); i++) {
+                for (int j = 0; j < listAllNode.size(); j++) {
+                    pathNode.get(i).add(0.0);
+                }
+            }
+
+            for (int i = 0; i < path.size() - 1 ; i++) {
+                pathNode.get(path.get(i)).set(path.get(i + 1), 1.0);
+            }
+
+            // Coba print pathNode
+            System.out.println("Path Node : ");
+            for (int i = 0; i < pathNode.size(); i++) {
+                for (int j = 0; j < pathNode.size(); j++) {
+                    System.out.print(pathNode.get(i).get(j) + " ");
+                }
+                System.out.println("");
+            }
+
+
+            Graph graph = new Graph(waypoints, pathNode);
+            graph.warna = true;
+            
+            System.out.println("Selesai 2");
+
+            // Create a compound painter that uses both the route-painter and the waypoint-painter
+            // List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
             painters.add(graph);
             painters.add(wp);
 
             CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
             jXMapViewer.setOverlayPainter(painter);
         }
-    }//GEN-LAST:event_cmdUCSActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

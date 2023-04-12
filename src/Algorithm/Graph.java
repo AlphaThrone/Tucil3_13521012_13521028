@@ -73,6 +73,7 @@ public class Graph implements Painter<JXMapViewer>
      */
     private void drawRoute(Graphics2D g, JXMapViewer map)
     {
+        System.out.println("Mulaii");
         // Gambarkan garis dari node ke node yang lainnya jika bertetangga
         for (int i = 0; i < adjMatrix.size(); i++)
         {
@@ -87,6 +88,7 @@ public class Graph implements Painter<JXMapViewer>
                 }
             }
         }
+        System.out.println("Selesai");
 
     }
 

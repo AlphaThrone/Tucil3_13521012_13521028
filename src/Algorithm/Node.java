@@ -79,4 +79,9 @@ public class Node {
         System.out.println(node.getName() + node.getPosition().getLatitude() + node.getPosition().getLongitude());
     }
 
+    public double getDistance(WayPoints other) {
+        int idx = neighbourNodes.indexOf(other);
+        return distanceNeighbour.get(idx);
+    }
+
 }
