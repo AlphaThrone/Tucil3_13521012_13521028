@@ -312,6 +312,20 @@ public class Main extends javax.swing.JFrame {
     private void cmdUCSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdUCSActionPerformed
         // TODO add your handling code here:
         // Cek apakah ada graph yang terbentuk dari file
+        painters = new ArrayList<Painter<JXMapViewer>>();
+        Graph graph = new Graph(waypoints, adjMatriks);
+        graph.warna = false;
+        
+        System.out.println("Selesai 2");
+
+        // Create a compound painter that uses both the route-painter and the waypoint-painter
+        // List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
+        painters.add(graph);
+        painters.add(wp);
+
+        CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+        jXMapViewer.setOverlayPainter(painter);
+
         if ((start == -1) || (end == -1)) {
             JPanel panel = new JPanel();
             panel.add(new JLabel("Pilih dahulu titik awal atau titik akhir!"));
@@ -365,7 +379,7 @@ public class Main extends javax.swing.JFrame {
             }
 
 
-            Graph graph = new Graph(waypoints, pathNode);
+            graph = new Graph(waypoints, pathNode);
             graph.warna = true;
             
             System.out.println("Selesai 2");
@@ -375,7 +389,7 @@ public class Main extends javax.swing.JFrame {
             painters.add(graph);
             painters.add(wp);
 
-            CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+            painter = new CompoundPainter<JXMapViewer>(painters);
             jXMapViewer.setOverlayPainter(painter);
 
             
@@ -386,6 +400,20 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
         // TODO add your handling code here:
         // Cek apakah ada graph yang terbentuk dari file
+        painters = new ArrayList<Painter<JXMapViewer>>();
+        Graph graph = new Graph(waypoints, adjMatriks);
+        graph.warna = false;
+        
+        System.out.println("Selesai 2");
+
+        // Create a compound painter that uses both the route-painter and the waypoint-painter
+        // List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
+        painters.add(graph);
+        painters.add(wp);
+
+        CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+        jXMapViewer.setOverlayPainter(painter);
+
         if ((start == -1) || (end == -1)) {
             JPanel panel = new JPanel();
             panel.add(new JLabel("Pilih dahulu titik awal atau titik akhir!"));
@@ -438,7 +466,7 @@ public class Main extends javax.swing.JFrame {
             }
 
 
-            Graph graph = new Graph(waypoints, pathNode);
+            graph = new Graph(waypoints, pathNode);
             graph.warna = true;
             
             System.out.println("Selesai 2");
@@ -448,7 +476,7 @@ public class Main extends javax.swing.JFrame {
             painters.add(graph);
             painters.add(wp);
 
-            CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+            painter = new CompoundPainter<JXMapViewer>(painters);
             jXMapViewer.setOverlayPainter(painter);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
